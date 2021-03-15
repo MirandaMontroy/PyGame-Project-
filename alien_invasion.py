@@ -37,9 +37,12 @@ class AlienInvasion:
         while True:
             #watch for keyboard and mouse movements 
             self._check_events()
-            self.ship.update()
-            self._update_bullets()
-            self._update_aliens()
+
+            if self.stats.game_active:
+                self.ship.update()
+                self._update_bullets()
+                self._update_aliens()
+            
             self._update_screen()
 
     def _update_bullets(self):
@@ -69,6 +72,9 @@ class AlienInvasion:
         #look for alien-ship collisions 
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
+
+        #look for aliens hitting the bottom of the screen
+        self._check_aliens_bottom()
 
         #check if the fleet is at an edge, then update all positions 
         self._check_fleet_edges()
@@ -166,19 +172,31 @@ class AlienInvasion:
 
     def _ship_hit(self):
         #respond to the ship being hit by an alien 
-        #decrement ships left 
-        self.stats.ships_left -= 1
+        if self.stats.ships_left > 0:
+            #decrement ships left 
+            self.stats.ships_left -= 1
 
-        #get rid of any remaining aliens and bullets 
-        self.aliens.empty()
-        self.bullets.empty()
+            #get rid of any remaining aliens and bullets 
+            self.aliens.empty()
+            self.bullets.empty()
 
-        #create a new fleet and center the ship 
-        self._create_fleet()
-        self.ship.center_ship()
+            #create a new fleet and center the ship 
+            self._create_fleet()
+            self.ship.center_ship()
 
-        #pause 
-        sleep(0.5)
+            #pause 
+            sleep(0.5)
+        
+        else:
+            self.stats.game_active = False
+
+    def _check_aliens_bottom(self):
+        #check if any aliens have reached the bottom of the screen
+        screen_rect = self.screen.get_rect()
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom:
+                self._ship_hit()
+                break
 
         
 
