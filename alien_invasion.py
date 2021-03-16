@@ -26,7 +26,7 @@ class AlienInvasion:
 
         #create an instance to store game statistics, and create a scoreboard  
         self.stats = GameStats(self)
-        self.sb = Scoreboard()
+        self.sb = Scoreboard(self)
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
