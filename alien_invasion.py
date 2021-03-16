@@ -113,6 +113,9 @@ class AlienInvasion:
             #create new fleet and center the ship
             self._create_fleet()
             self.ship.center_ship()
+
+            #hide the mouse cursor 
+            pygame.mouse.set_visible(False)
     
     def _check_keydown_events(self, event):
         #respond to key press 
@@ -217,6 +220,7 @@ class AlienInvasion:
         
         else:
             self.stats.game_active = False
+            pygame.mouse.set_visible(True)
 
     def _check_aliens_bottom(self):
         #check if any aliens have reached the bottom of the screen
